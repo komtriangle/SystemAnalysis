@@ -46,15 +46,17 @@ def format_couples(couples: []):
 
 def print_results(relationships: []):
     for i in range(len(relationships)):
-        print("r{0} {1}".format(i+1, format_couples(relationships[i])))
+        print("r{0}: {1}".format(i+1, format_couples(relationships[i])))
 
 
 def process_edges(edges: []):
-    #0 - прямое усправление
-    #1 - прямое подчинение
-    #2 - опосредственное управление
-    #3 - опосредственное подчинение
-    #4 - соподчиненность
+    """
+    0 - прямое усправление
+    1 - прямое подчинение
+    2 - опосредственное управление
+    3 - опосредственное подчинение
+    4 - соподчиненность
+    """
     relationships = [[] for i in range(5)]
     submission_dict = {}
     for edge in edges:
