@@ -1,17 +1,18 @@
 from pathlib import Path
 from itertools import permutations
-
+from io import StringIO
+import csv
 
 def parse_edge(line: str):
-    nodes = line.split(",")
-    if len(nodes) != 2:
+    if len(line) != 2:
         raise Exception("Error while parsing edge")
-    return nodes
+    return [int(node) for node in line]
 
 
-def csv_reader(csv_bytes: str):
-    data = csv_bytes.decode('utf-8').splitlines()
-    return [parse_edge(line) for line in data]
+def csv_reader(csvString: str):
+    f = StringIO(csvString)
+    reader = csv.reader(f, delimiter=',')
+    return [parse_edge(line) for line in reader]
 
 
 def permutations_nodes(nodes: []):
@@ -46,22 +47,24 @@ def format_couples(couples: []):
 
 def print_results(relationships: []):
     for i in range(len(relationships)):
-        print("r{0}: {1}".format(i+1, format_couples(relationships[i])))
+        print("r{0} {1}".format(i+1, format_couples(relationships[i])))
 
 
 def process_edges(edges: []):
-    """
+    '''
     0 - прямое усправление
     1 - прямое подчинение
     2 - опосредственное управление
     3 - опосредственное подчинение
     4 - соподчиненность
-    """
+    '''
     relationships = [[] for i in range(5)]
     submission_dict = {}
     for edge in edges:
-        relationships[0].append(edge)
-        relationships[1].append([edge[1], edge[0]])
+        if edge[0] not in relationships[0]:
+            relationships[0].append(edge[0])
+        if edge[1] not in relationships[1]:
+            relationships[1].append(edge[1])
         if edge[0] in submission_dict:
             submission_dict[edge[0]].append(edge[1])
         else:
@@ -69,13 +72,18 @@ def process_edges(edges: []):
     for key in submission_dict:
         nodes = submission_dict[key]
         if len(nodes) > 1:
-            relationships[4].extend(permutations_nodes(nodes))
+            relationships[4].extend(nodes)
         subordination = []
         indirect_subordination(subordination, submission_dict[key], submission_dict)
-        relationships[2].extend(permutations_management(key, subordination))
-        relationships[3].extend(permutations_subordinations(key, subordination))
+        if key not in relationships[2] and len(subordination) > 0:
+            relationships[2].append(key)
 
-    print_results(relationships)
+        for node in subordination:
+            if node not in relationships[3]:
+                relationships[3].append(node)
+
+    [r.sort() for r in relationships]
+    return relationships
 
 
 def serialize_csv(path_to_file: str):
@@ -86,18 +94,15 @@ def serialize_csv(path_to_file: str):
     return stream.read()
 
 
-def task(serialized_file: str):
-    edges = csv_reader(serialized_file)
-    process_edges(edges)
+def task(csvString: str):
+    edges = csv_reader(csvString)
+    return process_edges(edges)
 
+reference = [[1,3],[2,3,4,5],[1],[4,5],[2,3,4,5]]
 
-def main():
-    try:
-        path_to_csv = "./csv_samples/1.csv"
-        serialized_file = serialize_csv(path_to_csv)
-        task(serialized_file)
-    except Exception as e:
-        print(e)
-
-
-main()
+with open('csv_samples/1.csv') as file:
+    csvString = file.read()
+    result = task(csvString)
+    print(reference)
+    print(result)
+    print(result == reference)
