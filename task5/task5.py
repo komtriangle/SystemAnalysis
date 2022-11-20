@@ -19,7 +19,7 @@ def task5(ranking_str_1: str, ranking_str_2:str) -> str:
     for i in range(y_a_b.shape[0]):
         for j in range(y_a_b[i].shape[1]):
             if int(y_a_b[i,j]) == 0 and int(y_a_b_t[i,j]) == 0:
-                if (str(j+1),str(i+1)) not in conflicts:
+                if (str(j+1),str(i+1) not in conflicts:
                     conflicts.append((str(i+1),str(j+1)))
 
     return json.dumps(conflicts)
@@ -47,3 +47,9 @@ def ranking_length(ranking) -> int:
     return length
     
             
+
+
+a = task5("[[\"1\",\"2\"], [\"3\",\"4\",\"5\"], \"6\", \"7\", \"9\", [\"8\",\"10\"]]", "[\"1\", [\"2\",\"3\"],\"4\", [\"5\", \"6\", \"7\"], \"8\", \"9\", \"10\"]")
+
+with open('somefile.txt', 'a') as the_file:
+    the_file.write(a)
