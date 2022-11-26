@@ -133,13 +133,3 @@ def task(csvString: str):
     complexity = process_edges(edges)
     vertices = get_vertices(csv_reader(csvString))
     return entropy(vertices, complexity)
-
-
-reference = [[1, 3], [2, 3, 4, 5], [1], [4, 5], [2, 3, 4, 5]]
-
-with open('csv_samples/1.csv') as file:
-    csvString = file.read()
-    entropy = task(csvString)
-    print(entropy)
-
-
