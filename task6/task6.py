@@ -32,7 +32,7 @@ def task(json_string):
 
     k_0 = [1/len(data) for _ in range(len(data))]
     k = k_0
-    one_arr = np.array([1, 1, 1])
+    one_arr = np.array([1 for _ in range(len(data))])
     e = 0.001
 
     is_first = True

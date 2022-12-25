@@ -36,7 +36,7 @@ def exec_validation(input_data, validation_set):
 
 data_json = "[[1,3,2],[2,2,2],[1.5,3,1.5]]"
 data_csv = "1,3,2 \n2,2,2\n1.5,3,1.5"
-validation_data = json.loads("[0.468, 0.169, 0.363]")
+validation_data = json.loads("[0.468, 0.169, 0.363, 0]")
 e = 0.01
 
 
